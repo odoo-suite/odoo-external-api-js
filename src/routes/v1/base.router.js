@@ -25,11 +25,18 @@ router.get("/connection", async (req, res) => {
       message: "Invalid credentials",
     });
   } else {
-    res.status(200).json({
-      payload: payload,
-      success: true,
-      message: "Connection",
-    });
+    if (payload === false) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid credentials",
+      });
+    } else {
+      res.status(200).json({
+        payload: payload,
+        success: true,
+        message: "Connection",
+      });
+    }
   }
 });
 
@@ -46,11 +53,18 @@ router.post("/session", async (req, res) => {
       message: "Invalid credentials",
     });
   } else {
-    res.status(200).json({
-      payload: payload,
-      success: true,
-      message: "Session",
-    });
+    if (payload === false) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid credentials",
+      });
+    } else {
+      res.status(200).json({
+        payload: payload,
+        success: true,
+        message: "Session",
+      });
+    }
   }
 });
 

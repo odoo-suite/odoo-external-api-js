@@ -18,37 +18,47 @@ const createSession = async (database, username, password) => {
   const user = crypto_decrypt(username);
   const pass = crypto_decrypt(password);
 
+  console.log(db, user, pass);
+
   const result = await session(db, user, pass);
 
   if (result instanceof Error) {
     return result;
   } else {
-    const data_access_token = {
-      uid: result,
-      database: database,
-      username: username,
-      password: password,
-    };
+    if (result === false) {
+      console.log("Invalid credentials");
+      return false;
+    } else {
+      const data_access_token = {
+        uid: result,
+        database: database,
+        username: username,
+        password: password,
+      };
 
-    const access_token = jwt.sign(data_access_token, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRATION,
-    });
+      const access_token = jwt.sign(data_access_token, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION,
+      });
 
-    const data_refresh_token = {
-      database: database,
-      username: username,
-      password: password,
-    };
+      const data_refresh_token = {
+        database: database,
+        username: username,
+        password: password,
+      };
 
-    const refresh_token = jwt.sign(data_refresh_token, process.env.JWT_SECRET);
+      const refresh_token = jwt.sign(
+        data_refresh_token,
+        process.env.JWT_SECRET
+      );
 
-    const payload = {
-      access_token: access_token,
-      refresh_token: refresh_token,
-      uid: result,
-    };
+      const payload = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        uid: result,
+      };
 
-    return payload;
+      return payload;
+    }
   }
 };
 
