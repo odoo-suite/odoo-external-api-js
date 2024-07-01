@@ -18,8 +18,6 @@ const createSession = async (database, username, password) => {
   const user = crypto_decrypt(username);
   const pass = crypto_decrypt(password);
 
-  console.log(db, user, pass);
-
   const result = await session(db, user, pass);
 
   if (result instanceof Error) {
