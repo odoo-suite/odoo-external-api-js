@@ -4,6 +4,7 @@ const {
   getVersion,
   openConnection,
   createSession,
+  refreshSession,
 } = require("../../controllers/base.controller");
 
 router.get("/", async (req, res) => {
@@ -18,11 +19,18 @@ router.get("/", async (req, res) => {
 // Se recomienda desactivar esta ruta
 router.get("/connection", async (req, res) => {
   const payload = await openConnection();
-  res.status(200).json({
-    payload: payload,
-    success: true,
-    message: "Connection",
-  });
+  if (payload instanceof Error) {
+    return res.status(401).send({
+      success: false,
+      message: "Invalid credentials",
+    });
+  } else {
+    res.status(200).json({
+      payload: payload,
+      success: true,
+      message: "Connection",
+    });
+  }
 });
 
 router.post("/session", async (req, res) => {
@@ -32,11 +40,43 @@ router.post("/session", async (req, res) => {
     fields.username,
     fields.password
   );
-  res.status(200).json({
-    payload: payload,
-    success: true,
-    message: "Session",
-  });
+  if (payload instanceof Error) {
+    return res.status(401).send({
+      success: false,
+      message: "Invalid credentials",
+    });
+  } else {
+    res.status(200).json({
+      payload: payload,
+      success: true,
+      message: "Session",
+    });
+  }
+});
+
+router.post("/refresh", async (req, res) => {
+  const fields = { ...req.body };
+  const { refresh } = fields;
+  if (!refresh) {
+    return res.status(401).send({
+      success: false,
+      message: "No refresh token provided",
+    });
+  } else {
+    const payload = await refreshSession(refresh);
+    if (payload instanceof Error) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    } else {
+      res.status(200).json({
+        payload: payload,
+        success: true,
+        message: "Refresh",
+      });
+    }
+  }
 });
 
 module.exports = router;
