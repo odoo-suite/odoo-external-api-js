@@ -4,7 +4,7 @@ const {
   getVersion,
   openConnection,
   createSession,
-} = require("../../controllers/test.controller");
+} = require("../../controllers/base.controller");
 
 router.get("/", async (req, res) => {
   const payload = await getVersion();
@@ -15,6 +15,7 @@ router.get("/", async (req, res) => {
   });
 });
 
+// Se recomienda desactivar esta ruta
 router.get("/connection", async (req, res) => {
   const payload = await openConnection();
   res.status(200).json({

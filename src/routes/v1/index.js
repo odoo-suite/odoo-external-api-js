@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const testRouter = require("./test.router");
+const testRouter = require("./base.router");
 const queryRouter = require("./query.router");
 
 const mapNavigationUrls = [
   {
-    path: "/test",
+    path: "/base",
     route: testRouter,
   },
   {
