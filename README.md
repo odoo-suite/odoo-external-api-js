@@ -81,6 +81,8 @@ npm run start
 > POST `http://localhost:3000/api/v1/base/session`
 
 Data encrypted with crypto utils (crypto-js):
+
+A branch (no-encryption) has been left without encrypted requests
 ```json
 {
     "database": "aOhHDPfqD=",
